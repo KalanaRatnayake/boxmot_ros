@@ -1,0 +1,10 @@
+boxmot_ros_node:
+  ros__parameters:
+    tracking_model: "yolov9s.pt"
+    reid_model: "yolov9s.pt"
+    input_topic: "/yolo_ros/detection_result"
+    publish_annotated_image: True
+    output_annotated_topic: "/boxmot_ros/annotated_image"
+    output_detailed_topic: "/boxmot_ros/tracking_result"
+    confidence_threshold: 0.25
+    device: "0"
