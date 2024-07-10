@@ -1,7 +1,7 @@
 boxmot_ros_node:
   ros__parameters:
-    tracking_model: "yolov9s.pt"
-    reid_model: "yolov9s.pt"
+    tracking_model: "deepocsort"
+    reid_model: "osnet_x0_25_msmt17.pt"
     input_topic: "/yolo_ros/detection_result"
     publish_annotated_image: True
     output_annotated_topic: "/boxmot_ros/annotated_image"
