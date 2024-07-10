@@ -131,7 +131,7 @@ ros2 launch boxmot_ros boxmot.launch.py
 
 Here is a summary of whether supported models work with boxmot_ros node (in docker) on various platforms and the time it takes to execute a single interation of `YoloROS.image_callback` function. Values are measured as an average of 100 executions of the function and Input is a 640x480 RGB image at 30 fps.
 
-Laptop -> Ryzen 9 16 core with RTX3070 mobile GPU with Ubuntu 22.04
+Laptop -> Ryzen 9 16 core with RTX3070 mobile GPU with Ubuntu 22.04 \
 Jetson Nano -> Overclocked with [Qengineering Ubuntu 20.04 in Headless mode](https://github.com/Qengineering/Jetson-Nano-Ubuntu-20-image?tab=readme-ov-file#headless)
 
 | Model | Laptop (amd64) | Jetson Nano |
