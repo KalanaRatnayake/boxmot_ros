@@ -11,7 +11,6 @@ Replace `image` and 'device' parameter in the compose.yml with following values 
 | System              | ROS Version | Value for `image`                                 | Value for `device`  | Size    |
 | :---                | :---        | :---                                              |  :---               | :---:   |
 | AMD64               | Humble      | ghcr.io/kalanaratnayake/boxmot-ros:humble         | `cpu`, `0`, `0,1,2` | 5.64 GB |
-| Jetson Nano         | Humble      | ghcr.io/kalanaratnayake/boxmot-ros:humble-j-nano  | `cpu`, `0`          | 3.29GB  |
 
 ### Default models with Docker Compose
 
@@ -56,27 +55,12 @@ mkdir -p boxmot_ws/src && cd boxmot_ws/src
 git clone https://github.com/KalanaRatnayake/boxmot_ros.git && cd ..
 ```
 
-<details> 
-<summary> <h3> on AMD64 </h3> </summary>
-
 Pull the Docker image and start compose (No need to run `docker compose build`)
 ```bash
 cd src/boxmot_ros/docker
 docker compose -f compose.amd64.yaml pull
 docker compose -f compose.amd64.yaml up
 ```
-</details>
-
-<details> 
-<summary> <h3> on JetsonNano </h3> </summary>
-
-Pull the Docker image and start compose (No need to run `docker compose build`)
-```bash
-cd src/boxmot_ros/docker
-docker compose -f compose.jnano.yaml pull
-docker compose -f compose.jnano.yaml up
-```
-</details>
 
 <br>
 
@@ -132,12 +116,11 @@ ros2 launch boxmot_ros boxmot.launch.py
 Here is a summary of whether supported models work with boxmot_ros node (in docker) on various platforms and the time it takes to execute a single interation of `YoloROS.image_callback` function. Values are measured as an average of 100 executions of the function and Input is a 640x480 RGB image at 30 fps.
 
 Laptop -> Ryzen 9 16 core with RTX3070 mobile GPU with Ubuntu 22.04
-Jetson Nano -> Overclocked with [Qengineering Ubuntu 20.04 in Headless mode](https://github.com/Qengineering/Jetson-Nano-Ubuntu-20-image?tab=readme-ov-file#headless)
 
-| Model | Laptop (amd64) | Jetson Nano |
-| :---  |  ---: | ---: |
-| `deepocsort` | 27 ms |  975 ms |
-| `strongsort` | 20 ms |  800 ms |
-| `ocsort`     | 17 ms |  750 ms |
-| `bytetrack`  | 17 ms |  650 ms |
-| `botsort`    | 14 ms |  210 ms |
+| Model | Laptop (amd64) |
+| :---  |  ---: |
+| `deepocsort` | 27 ms |
+| `strongsort` | 20 ms |
+| `ocsort`     | 17 ms |
+| `bytetrack`  | 17 ms |
+| `botsort`    | 14 ms |
