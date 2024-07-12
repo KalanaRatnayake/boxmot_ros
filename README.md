@@ -62,6 +62,12 @@ docker compose -f compose.amd64.yaml pull
 docker compose -f compose.amd64.yaml up
 ```
 
+Reset the system and remove volume
+```bash
+docker compose -f compose.amd64.yaml down
+docker volume rm docker_boxmot
+```
+
 <br>
 
 ## Native Usage
