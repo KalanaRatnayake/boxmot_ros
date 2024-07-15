@@ -10,7 +10,7 @@ Replace `image` and 'device' parameter in the compose.yml with following values 
 
 | System              | ROS Version | Value for `image`                                 | Value for `device`  | Size    |
 | :---                | :---        | :---                                              |  :---               | :---:   |
-| AMD64               | Humble      | ghcr.io/kalanaratnayake/boxmot-ros:humble         | `cpu`, `0`, `0,1,2` | 5.64 GB |
+| AMD64               | Humble      | ghcr.io/kalanaratnayake/boxmot-ros:humble         | `cpu`, `0`, `0,1,2` | 7.34 GB |
 
 ### Default models with Docker Compose
 
@@ -76,7 +76,7 @@ Clone this repository with and install dependencies.
 
 ```bash
 git clone https://github.com/KalanaRatnayake/boxmot_ros.git
-git clone https://github.com/KalanaRatnayake/boxmot_ros_msgs.git
+git clone https://github.com/KalanaRatnayake/detection_msgs.git
 cd boxmot_ros
 pip3 install -r requirements.txt
 ```
