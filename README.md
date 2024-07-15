@@ -14,7 +14,7 @@ Replace `image` and 'device' parameter in the compose.yml with following values 
 
 ### Default models with Docker Compose
 
-Add the following snippet under `services` to any compose.yaml file to add this container and use an existing model.
+Add the following snippet under `services` to any compose.yaml file to add this container and use an existing model. An example is available in [AIResearchLab/human-tracking-setup](https://github.com/AIResearchLab/human-tracking-setup)
 
 ```bash
 services:
