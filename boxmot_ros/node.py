@@ -90,7 +90,7 @@ class BoxmotROS(Node):
     def image_callback(self, received_msg):
         start = time.time_ns()
 
-        self.input_image = self.bridge.imgmsg_to_cv2(received_msg.source_rgb)
+        self.input_image = self.bridge.imgmsg_to_cv2(received_msg.source_rgb, desired_encoding="bgr8")
 
         if received_msg.detections:
             detection_list = []
@@ -159,7 +159,7 @@ class BoxmotROS(Node):
 
             if self.publish_annotated_image:
                 self.output_image = self.tracker.plot_results(self.input_image, show_trajectories=True)
-                result_msg = self.bridge.cv2_to_imgmsg(self.output_image, encoding="bgr8")
+                result_msg        = self.bridge.cv2_to_imgmsg(self.output_image, encoding="bgr8")
                 
                 self.publisher_image.publish(result_msg)
 
