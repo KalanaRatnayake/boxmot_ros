@@ -21,7 +21,9 @@ services:
               count: 1
               capabilities: [gpu]   
     volumes:
-      - boxmot:/boxmot
+      - type: volume
+        source: boxmot
+        target: /boxmot
 
 volumes:
   boxmot:

@@ -12,40 +12,6 @@ Replace `image` and 'device' parameter in the compose.yml with following values 
 | :---                | :---        | :---                                              |  :---               | :---:   |
 | AMD64               | Humble      | ghcr.io/kalanaratnayake/boxmot-ros:humble         | `cpu`, `0`, `0,1,2` | 7.34 GB |
 
-### Default models with Docker Compose
-
-Add the following snippet under `services` to any compose.yaml file to add this container and use an existing model. An example is available in [AIResearchLab/human-tracking-setup](https://github.com/AIResearchLab/human-tracking-setup)
-
-```bash
-services:
-  boxmot:
-    image: ghcr.io/kalanaratnayake/boxmot-ros:humble
-    environment:
-      - TRACKING_MODEL=deepocsort
-      - REID_MODEL=osnet_x0_25_msmt17.pt
-      - INPUT_TOPIC=/yolo_ros/detection_result
-      - PUBLISH_ANNOTATED_IMAGE=True
-      - OUTPUT_ANNOTATED_TOPIC=/boxmot_ros/annotated_image
-      - OUTPUT_DETAILED_TOPIC=/boxmot_ros/tracking_result
-      - CONFIDENCE_THRESHOLD=0.25
-      - DEVICE='0'
-    restart: unless-stopped
-    privileged: true
-    network_mode: host
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [gpu]   
-    volumes:
-      - boxmot:/boxmot
-
-volumes:
-  boxmot:
-```
-
 ## Docker Usage with this repository
 
 Clone this reposiotory
@@ -103,8 +69,8 @@ ros2 launch boxmot_ros boxmot.launch.py
 
 | ROS Parameter           | Docker ENV parameter    | Default Value                | Description |
 | :---                    | :---                    | :---:                        | :---        |
-| tracking_model          | TRACKING_MODEL          | `deepocsort`                 | Model to be used for tracking. see [1] for default models and [2] for custom models |
-| reid_model              | REID_MODEL              | `osnet_x0_25_msmt17.pt`      | Model to be used for reidentification. see [1] for default models and [2] for custom models |
+| tracking_model          | TRACKING_MODEL          | `deepocsort`                 | Model to be used for tracking. see [1] for default models |
+| reid_model              | REID_MODEL              | `osnet_x0_25_msmt17.pt`      | Model to be used for reidentification. see [1] for default models |
 | input_topic             | INPUT_TOPIC             | `/yolo_ros/detection_result` | Topic to subscribe for RGB image. Accepts `sensor_msgs/Image` |
 | publish_annotated_image | PUBLISH_ANNOTATED_IMAGE | `False`                      | Whether to publish annotated image, increases callback execution time when set to `True` |
 | output_annotated_topic  | OUTPUT_ANNOTATED_TOPIC  | `/boxmot_ros/annotated_image` | Topic for publishing annotated images uses `sensor_msgs/Image` |
@@ -114,8 +80,6 @@ ros2 launch boxmot_ros boxmot.launch.py
 
 
 [1] If the reid model is available at [MODEL_ZOO](https://kaiyangzhou.github.io/deep-person-reid/MODEL_ZOO), and tracking_model is supported [deepocsort, strongsort, ocsort, bytetrack, botsort]. They will be downloaded from the cloud at the startup. We are using docker volumes to maintain downloaded weights so that weights are not downloaded at each startup. Use the snipped in [Default models with Docker Compose](https://github.com/KalanaRatnayake/boxmot_ros#default-models-with-docker-compose)
-
-[2] Give the tracking model weight file's name as `TRACKING_MODEL` parameter and reidentification model weight file's name as `REID_MODEL` parameter. Update the docker volume source tag to direct to the folder and use docker bind-mounts instead of docker volumes where the weight files exist in the host machine. As an example if the weight files are in `/home/kalana/Downloads/weight/` folder, then use the snipped in [Custom models with Docker Compose](https://github.com/KalanaRatnayake/boxmot_ros#custom-models-with-docker-compose)
 
 ## Latency description
 
