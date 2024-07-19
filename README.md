@@ -8,9 +8,9 @@ To use GPU with docker while on AMD64 systems, install [nvidia-container-toolkit
 
 Replace `image` and 'device' parameter in the compose.yml with following values for respective systems.
 
-| System              | ROS Version | Value for `image`                                 | Value for `device`  | Size    |
-| :---                | :---        | :---                                              |  :---               | :---:   |
-| AMD64               | Humble      | ghcr.io/kalanaratnayake/boxmot-ros:humble         | `cpu`, `0`, `0,1,2` | 7.34 GB |
+| System              | ROS Version | Value for `image`                                 | Value for `device`  | Size   |
+| :---                | :---        | :---                                              |  :---               | :---:  |
+| AMD64               | Humble      | ghcr.io/kalanaratnayake/boxmot-ros:humble         | `cpu`, `0`, `0,1,2` | 5.7 GB |
 
 ## Docker Usage with this repository
 
