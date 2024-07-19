@@ -77,4 +77,21 @@ ENTRYPOINT [ "/workspace_entrypoint.sh" ]
 
 WORKDIR ${WORKSPACE_ROOT}
 
-CMD ros2 launch boxmot_ros docker.launch.py
+CMD ros2 launch boxmot_ros docker.launch.py yolo_model:=$YOLO_MODEL \
+                                            input_rgb_topic:=$INPUT_RGB_TOPIC \
+                                            input_depth_topic:=$INPUT_DEPTH_TOPIC \
+                                            subscribe_depth:=$SUBSCRIBE_DEPTH \
+                                            publish_annotated_image:=$PUBLISH_ANNOTATED_IMAGE \
+                                            annotated_topic:=$YOLO_ANNOTATED_TOPIC \
+                                            detailed_topic:=$YOLO_DETAILED_TOPIC \
+                                            threshold:=$YOLO_THRESHOLD \
+                                            device:=$YOLO_DEVICE \
+                                            tracking_model:=$TRACKING_MODEL \
+                                            reid_model:=$REID_MODEL \
+                                            input_topic:=$INPUT_TOPIC \
+                                            publish_annotated_image:=$PUBLISH_ANNOTATED_IMAGE \
+                                            annotated_topic:=$BOXMOT_ANNOTATED_TOPIC \
+                                            detailed_topic:=$BOXMOT_DETAILED_TOPIC \
+                                            threshold:=$BOXMOT_THRESHOLD \
+                                            device:=$BOXMOT_DEVICE
+
