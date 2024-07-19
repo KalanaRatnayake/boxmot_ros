@@ -41,9 +41,11 @@ RUN apt-get clean
 WORKDIR ${WORKSPACE_ROOT}/src
 
 RUN git clone https://github.com/KalanaRatnayake/boxmot_ros.git
+RUN git clone https://github.com/KalanaRatnayake/yolo_ros.git
 RUN git clone https://github.com/KalanaRatnayake/detection_msgs.git
 
 RUN pip3 install --no-cache-dir -r ${WORKSPACE_ROOT}/src/boxmot_ros/requirements.txt
+RUN pip3 install --no-cache-dir -r ${WORKSPACE_ROOT}/src/yolo_ros/requirements.txt
 
 RUN rosdep install --from-paths ${WORKSPACE_ROOT}/src -y --ignore-src
 
@@ -95,11 +97,4 @@ ENTRYPOINT [ "/workspace_entrypoint.sh" ]
 
 WORKDIR ${WORKSPACE_ROOT}
 
-CMD ros2 run boxmot_ros boxmot_ros --ros-args -p "tracking_model:=$TRACKING_MODEL" \
-                                            -p "reid_model:=$REID_MODEL" \
-                                            -p "input_topic:=$INPUT_TOPIC" \
-                                            -p "publish_annotated_image:=$PUBLISH_ANNOTATED_IMAGE" \
-                                            -p "output_annotated_topic:=$OUTPUT_ANNOTATED_TOPIC" \
-                                            -p "output_detailed_topic:=$OUTPUT_DETAILED_TOPIC" \
-                                            -p "confidence_threshold:=$CONFIDENCE_THRESHOLD" \
-                                            -p "device:=$DEVICE"
+CMD ros2 launch boxmot_ros docker.launch.py

@@ -6,10 +6,20 @@ services:
       - REID_MODEL=osnet_x0_25_msmt17.pt
       - INPUT_TOPIC=/yolo_ros/detection_result
       - PUBLISH_ANNOTATED_IMAGE=True
-      - OUTPUT_ANNOTATED_TOPIC=/boxmot_ros/annotated_image
-      - OUTPUT_DETAILED_TOPIC=/boxmot_ros/tracking_result
-      - CONFIDENCE_THRESHOLD=0.25
-      - DEVICE='0'
+      - BOXMOT_ANNOTATED_TOPIC=/boxmot_ros/annotated_image
+      - BOXMOT_DETAILED_TOPIC=/boxmot_ros/tracking_result
+      - BOXMOT_THRESHOLD=0.25
+      - BOXMOT_DEVICE='0'
+      - YOLO_MODEL=yolov10x.pt
+      # - YOLO_MODEL=weights/yolov9t.pt            ---> for custom weights
+      - INPUT_RGB_TOPIC=/camera/color/image_raw
+      - INPUT_DEPTH_TOPIC=/camera/depth/points
+      - SUBSCRIBE_DEPTH=True
+      - PUBLISH_ANNOTATED_IMAGE=True
+      - YOLO_ANNOTATED_TOPIC=/yolo_ros/annotated_image
+      - YOLO_DETAILED_TOPIC=/yolo_ros/detection_result
+      - YOLO_THRESHOLD=0.25
+      - YOLO_DEVICE='0'
     restart: unless-stopped
     privileged: true
     network_mode: host
@@ -24,6 +34,9 @@ services:
       - type: volume
         source: boxmot
         target: /boxmot
+      # - type: bind                              ---> for custom weights
+      #   source: ./weights
+      #   target: /boxmot/weights
 
 volumes:
   boxmot:

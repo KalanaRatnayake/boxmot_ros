@@ -4,7 +4,7 @@ boxmot_ros_node:
     reid_model: "osnet_x0_25_msmt17.pt"
     input_topic: "/yolo_ros/detection_result"
     publish_annotated_image: True
-    output_annotated_topic: "/boxmot_ros/annotated_image"
-    output_detailed_topic: "/boxmot_ros/tracking_result"
-    confidence_threshold: 0.25
+    annotated_topic: "/boxmot_ros/annotated_image"
+    detailed_topic: "/boxmot_ros/tracking_result"
+    threshold: 0.25
     device: "0"

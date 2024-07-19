@@ -7,7 +7,6 @@ from pathlib import Path
 from rclpy.node import Node
 from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy
 
-from std_msgs.msg import String
 from sensor_msgs.msg import Image
 from detection_msgs.msg import Detections
 
@@ -24,18 +23,18 @@ class BoxmotROS(Node):
         self.declare_parameter("reid_model",                "osnet_x0_25_msmt17.pt")
         self.declare_parameter("input_topic",               "/input")
         self.declare_parameter("publish_annotated_image",   False)
-        self.declare_parameter("output_annotated_topic",    "/boxmot_ros/annotated_image")
-        self.declare_parameter("output_detailed_topic",     "/boxmot_ros/tracking_result")
-        self.declare_parameter("confidence_threshold",      0.25)
+        self.declare_parameter("annotated_topic",           "/boxmot_ros/annotated_image")
+        self.declare_parameter("detailed_topic",            "/boxmot_ros/tracking_result")
+        self.declare_parameter("threshold",                 0.25)
         self.declare_parameter("device",                    "cpu")
         
         self.tracking_model             = self.get_parameter("tracking_model").get_parameter_value().string_value
         self.reid_model                 = self.get_parameter("reid_model").get_parameter_value().string_value
         self.input_topic                = self.get_parameter("input_topic").get_parameter_value().string_value
         self.publish_annotated_image    = self.get_parameter("publish_annotated_image").get_parameter_value().bool_value
-        self.output_annotated_topic     = self.get_parameter("output_annotated_topic").get_parameter_value().string_value
-        self.output_detailed_topic      = self.get_parameter("output_detailed_topic").get_parameter_value().string_value
-        self.confidence_threshold       = self.get_parameter("confidence_threshold").get_parameter_value().double_value
+        self.annotated_topic            = self.get_parameter("annotated_topic").get_parameter_value().string_value
+        self.detailed_topic             = self.get_parameter("detailed_topic").get_parameter_value().string_value
+        self.threshold                  = self.get_parameter("threshold").get_parameter_value().double_value
         self.device                     = self.get_parameter("device").get_parameter_value().string_value
 
         self.bridge = CvBridge()
@@ -65,7 +64,7 @@ class BoxmotROS(Node):
             self.tracker = HybridSORT(  model_weights=Path(self.reid_model), # which ReID model to use
                                         device=self.device,
                                         half=False,
-                                        det_thresh=self.confidence_threshold )
+                                        det_thresh=self.threshold )
         else:
             self.get_logger().error('Please select a valid value for "tracking_model" parameter')
 
@@ -76,10 +75,10 @@ class BoxmotROS(Node):
 
         self.subscription       = self.create_subscription(Detections, self.input_topic, self.image_callback, qos_profile=self.subscriber_qos_profile)
         
-        self.publisher_results  = self.create_publisher(Detections, self.output_detailed_topic, 10)
+        self.publisher_results  = self.create_publisher(Detections, self.detailed_topic, 10)
 
         if self.publish_annotated_image:
-            self.publisher_image    = self.create_publisher(Image, self.output_annotated_topic, 10)
+            self.publisher_image    = self.create_publisher(Image, self.annotated_topic, 10)
 
         self.subscription  # prevent unused variable warning
         self.counter = 0
