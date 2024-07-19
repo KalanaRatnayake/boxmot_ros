@@ -8,9 +8,10 @@ To use GPU with docker while on AMD64 systems, install [nvidia-container-toolkit
 
 Replace `image` and 'device' parameter in the compose.yml with following values for respective systems.
 
-| System              | ROS Version | Value for `image`                                 | Value for `device`  | Size   |
-| :---                | :---        | :---                                              |  :---               | :---:  |
-| AMD64               | Humble      | ghcr.io/kalanaratnayake/boxmot-ros:humble         | `cpu`, `0`, `0,1,2` | 5.7 GB |
+| System      | ROS Version | Value for `image`                                 | Value for `device`  | Size    | file  |
+| :---        | :---        | :---                                              |  :---               | :---:   | :---: |
+| AMD64       | Humble      | ghcr.io/kalanaratnayake/boxmot-ros:humble         | `cpu`, `0`, `0,1,2` | 5.7 GB  | docker/compose.amd64.yaml |
+| Jetson Nano | Humble      | ghcr.io/kalanaratnayake/boxmot-ros:humble-j-nano  | `cpu`, `0`          | 3.36GB  | docker/compose.jnano.yaml |
 
 ## Docker Usage with this repository
 
@@ -21,6 +22,9 @@ mkdir -p boxmot_ws/src && cd boxmot_ws/src
 git clone https://github.com/KalanaRatnayake/boxmot_ros.git && cd ..
 ```
 
+<details> 
+<summary> <h3> on AMD64 </h3> </summary>
+  
 Pull the Docker image and start compose (No need to run `docker compose build`)
 ```bash
 cd src/boxmot_ros/docker
@@ -33,6 +37,25 @@ Reset the system and remove volume
 docker compose -f compose.amd64.yaml down
 docker volume rm docker_boxmot
 ```
+
+</details>
+
+<details> 
+<summary> <h3> on JetsonNano </h3> </summary>
+  
+Pull the Docker image and start compose (No need to run `docker compose build`)
+```bash
+cd src/boxmot_ros/docker
+docker compose -f compose.jnano.yaml pull
+docker compose -f compose.jnano.yaml up
+```
+
+Reset the system and remove volume
+```bash
+docker compose -f compose.jnano.yaml down
+docker volume rm docker_boxmot
+```
+</details>
 
 <br>
 
