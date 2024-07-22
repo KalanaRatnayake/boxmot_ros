@@ -21,7 +21,7 @@ services:
       - YOLO_THRESHOLD=0.25
       - YOLO_DEVICE='0'
     restart: unless-stopped
-    privileged: true
+    # privileged: true
     network_mode: host
     deploy:
       resources:

@@ -1,2 +1,2 @@
-# boxmot
-boxmot @ git+https://github.com/KalanaRatnayake/boxmot.git
+boxmot
+# boxmot @ git+https://github.com/KalanaRatnayake/boxmot.git
