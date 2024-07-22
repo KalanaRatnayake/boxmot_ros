@@ -25,11 +25,6 @@ RUN apt-get install -y --no-install-recommends  python3-pip \
                                                 ros-$ROS_DISTRO-rmw-cyclonedds-cpp \
                                                 ros-$ROS_DISTRO-vision-opencv
 
-RUN pip3 install --upgrade --no-cache-dir torch==1.13.0+cu117 \
-                                          torchvision==0.14.0+cu117 \
-                                          torchaudio==0.13.0 \
-                                          --extra-index-url https://download.pytorch.org/whl/cu117
-
 RUN apt-get clean
 
 #############################################################################################################################
