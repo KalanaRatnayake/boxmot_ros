@@ -65,7 +65,6 @@ Clone this repository with and install dependencies.
 
 ```bash
 git clone https://github.com/KalanaRatnayake/boxmot_ros.git
-git clone https://github.com/KalanaRatnayake/yolo_ros.git
 git clone https://github.com/KalanaRatnayake/detection_msgs.git
 pip3 install -r boxmot_ros/requirements.txt
 pip3 install -r yolo_ros/requirements.txt
@@ -82,14 +81,7 @@ colcon build
 ```
 ### Start the system
 
-To use the yolo detection, run launch file in a terminal,
-
-```bash
-source ./install/setup.bash
-ros2 launch yolo_ros yolo.launch.py
-```
-
-To use the boxmot tracking, run the launch file in a seperate terminal, run,
+To use the boxmot tracking, run the launch file in terminal, run,
 
 ```bash
 source ./install/setup.bash
@@ -100,8 +92,6 @@ ros2 launch boxmot_ros boxmot.launch.py
 <br>
 
 ## Parameter decription
-
-For parameters missing in thefollowing table (`yolo_ros` parameters) check the respective [yolo_ros parameters](https://github.com/KalanaRatnayake/yolo_ros#parameter-decription).
 
 | ROS Parameter           | Docker ENV parameter    | Default Value                 | Description |
 | :---                    | :---                    | :---:                         | :---        |

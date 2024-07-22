@@ -36,11 +36,9 @@ RUN apt-get clean
 WORKDIR ${WORKSPACE_ROOT}/src
 
 RUN git clone https://github.com/KalanaRatnayake/boxmot_ros.git
-RUN git clone https://github.com/KalanaRatnayake/yolo_ros.git
 RUN git clone https://github.com/KalanaRatnayake/detection_msgs.git
 
 RUN pip3 install --no-cache-dir -r ${WORKSPACE_ROOT}/src/boxmot_ros/requirements.txt
-RUN pip3 install --no-cache-dir -r ${WORKSPACE_ROOT}/src/yolo_ros/requirements.txt
 
 RUN rosdep install --from-paths ${WORKSPACE_ROOT}/src -y --ignore-src
 
@@ -92,16 +90,7 @@ ENTRYPOINT [ "/workspace_entrypoint.sh" ]
 
 WORKDIR ${WORKSPACE_ROOT}
 
-CMD ros2 launch boxmot_ros docker.launch.py yolo_model:=$YOLO_MODEL \
-                                            input_rgb_topic:=$INPUT_RGB_TOPIC \
-                                            input_depth_topic:=$INPUT_DEPTH_TOPIC \
-                                            subscribe_depth:=$SUBSCRIBE_DEPTH \
-                                            yolo_publish_annotated_image:=$YOLO_PUBLISH_ANNOTATED_IMAGE \
-                                            yolo_annotated_topic:=$YOLO_ANNOTATED_TOPIC \
-                                            yolo_detailed_topic:=$YOLO_DETAILED_TOPIC \
-                                            yolo_threshold:=$YOLO_THRESHOLD \
-                                            yolo_device:=$YOLO_DEVICE \
-                                            tracking_model:=$TRACKING_MODEL \
+CMD ros2 launch boxmot_ros docker.launch.py tracking_model:=$TRACKING_MODEL \
                                             reid_model:=$REID_MODEL \
                                             input_topic:=$INPUT_TOPIC \
                                             boxmot_publish_annotated_image:=$BOXMOT_PUBLISH_ANNOTATED_IMAGE \
