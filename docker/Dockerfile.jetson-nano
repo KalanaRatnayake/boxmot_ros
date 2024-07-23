@@ -1,0 +1,85 @@
+#---------------------------------------------------------------------------------------------------------------------------
+#----
+#----   Start base image
+#----
+#---------------------------------------------------------------------------------------------------------------------------
+
+FROM ghcr.io/kalanaratnayake/foxy-ros-pytorch:1-13-humble-core-r32.7.1 as base
+
+## Parameters
+ENV ROS_DISTRO=humble
+ENV WORKSPACE_ROOT=/boxmot
+
+#############################################################################################################################
+#####
+#####   Clone and build Yolo packages
+#####
+#############################################################################################################################
+
+WORKDIR ${WORKSPACE_ROOT}/src
+
+RUN git clone https://github.com/KalanaRatnayake/boxmot_ros.git
+RUN git clone https://github.com/KalanaRatnayake/detection_msgs.git
+
+RUN pip3 install --no-cache-dir boxmot@git+https://github.com/KalanaRatnayake/boxmot.git
+
+WORKDIR ${WORKSPACE_ROOT}
+
+RUN . /opt/ros/${ROS_DISTRO}/install/setup.sh && colcon build \
+                                                    --merge-install \
+                                                    --cmake-args -DCMAKE_BUILD_TYPE=Release 
+
+WORKDIR /
+
+#############################################################################################################################
+#####
+#####   Remove workspace source and build files that are not relevent to running the system
+#####
+#############################################################################################################################
+
+RUN rm -rf ${WORKSPACE_ROOT}/src
+RUN rm -rf ${WORKSPACE_ROOT}/log
+RUN rm -rf ${WORKSPACE_ROOT}/build
+
+RUN rm -rf /var/lib/apt/lists/*
+RUN rm -rf /tmp/*
+
+RUN apt-get clean
+
+#---------------------------------------------------------------------------------------------------------------------------
+#----
+#----   Start final release image
+#----
+#---------------------------------------------------------------------------------------------------------------------------
+
+
+FROM ghcr.io/kalanaratnayake/foxy-ros-pytorch:1-13-humble-core-r32.7.1 as final
+
+## Parameters
+
+ENV WORKSPACE_ROOT=/boxmot
+
+ENV RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+
+ENV LD_PRELOAD=/usr/lib/aarch64-linux-gnu/libgomp.so.1
+
+WORKDIR /
+
+COPY --from=base / /
+
+COPY docker/workspace_entrypoint.sh /workspace_entrypoint.sh
+
+RUN chmod +x /workspace_entrypoint.sh
+
+ENTRYPOINT [ "/workspace_entrypoint.sh" ]
+
+WORKDIR ${WORKSPACE_ROOT}
+
+CMD ros2 run boxmot_ros boxmot_ros --ros-args -p "tracking_model:=$TRACKING_MODEL" \
+                                              -p "reid_model:=$REID_MODEL" \
+                                              -p "input_topic:=$INPUT_TOPIC" \
+                                              -p "publish_annotated_image:=$PUBLISH_ANNOTATED_IMAGE" \
+                                              -p "annotated_topic:=$ANNOTATED_TOPIC" \
+                                              -p "detailed_topic:=$DETAILED_TOPIC" \
+                                              -p "threshold:=$THRESHOLD" \
+                                              -p "device:=$DEVICE"

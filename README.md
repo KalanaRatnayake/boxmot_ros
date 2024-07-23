@@ -67,7 +67,6 @@ Clone this repository with and install dependencies.
 git clone https://github.com/KalanaRatnayake/boxmot_ros.git
 git clone https://github.com/KalanaRatnayake/detection_msgs.git
 pip3 install -r boxmot_ros/requirements.txt
-pip3 install -r yolo_ros/requirements.txt
 
 cd ..
 rosdep install --from-paths src -y --ignore-src
