@@ -5,13 +5,13 @@ services:
       - TRACKING_MODEL=deepocsort
       - REID_MODEL=osnet_x0_25_msmt17.pt
       - INPUT_TOPIC=/yolo_ros/detection_result
-      - BOXMOT_PUBLISH_ANNOTATED_IMAGE=True
-      - BOXMOT_ANNOTATED_TOPIC=/boxmot_ros/annotated_image
-      - BOXMOT_DETAILED_TOPIC=/boxmot_ros/tracking_result
-      - BOXMOT_THRESHOLD=0.25
-      - BOXMOT_DEVICE='0'
+      - PUBLISH_ANNOTATED_IMAGE=True
+      - ANNOTATED_TOPIC=/boxmot_ros/annotated_image
+      - DETAILED_TOPIC=/boxmot_ros/tracking_result
+      - THRESHOLD=0.25
+      - DEVICE='0'
     restart: unless-stopped
-    # privileged: true
+    privileged: true
     network_mode: host
     deploy:
       resources:
@@ -24,9 +24,6 @@ services:
       - type: volume
         source: boxmot
         target: /boxmot
-      # - type: bind                              ---> for custom weights
-      #   source: ./weights
-      #   target: /boxmot/weights
 
 volumes:
   boxmot:

@@ -90,11 +90,11 @@ ENTRYPOINT [ "/workspace_entrypoint.sh" ]
 
 WORKDIR ${WORKSPACE_ROOT}
 
-CMD ros2 launch boxmot_ros docker.launch.py tracking_model:=$TRACKING_MODEL \
-                                            reid_model:=$REID_MODEL \
-                                            input_topic:=$INPUT_TOPIC \
-                                            boxmot_publish_annotated_image:=$BOXMOT_PUBLISH_ANNOTATED_IMAGE \
-                                            boxmot_annotated_topic:=$BOXMOT_ANNOTATED_TOPIC \
-                                            boxmot_detailed_topic:=$BOXMOT_DETAILED_TOPIC \
-                                            boxmot_threshold:=$BOXMOT_THRESHOLD \
-                                            boxmot_device:=$BOXMOT_DEVICE
+CMD ros2 run boxmot_ros boxmot_ros --ros-args -p "tracking_model:=$TRACKING_MODEL" \
+                                              -p "reid_model:=$REID_MODEL" \
+                                              -p "input_topic:=$INPUT_TOPIC" \
+                                              -p "publish_annotated_image:=$PUBLISH_ANNOTATED_IMAGE" \
+                                              -p "annotated_topic:=$ANNOTATED_TOPIC" \
+                                              -p "detailed_topic:=$DETAILED_TOPIC" \
+                                              -p "threshold:=$THRESHOLD" \
+                                              -p "device:=$DEVICE"
