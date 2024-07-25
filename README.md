@@ -11,7 +11,6 @@ Replace `image` and 'device' parameter in the compose.yml with following values 
 | System      | ROS Version | Value for `image`                                 | Value for `device`  | Size    | file  |
 | :---        | :---        | :---                                              |  :---               | :---:   | :---: |
 | AMD64       | Humble      | ghcr.io/kalanaratnayake/boxmot-ros:humble         | `cpu`, `0`, `0,1,2` | 5.7 GB  | docker/compose.amd64.yaml |
-| Jetson Nano | Humble      | ghcr.io/kalanaratnayake/boxmot-ros:humble-j-nano  | `cpu`, `0`          | 3.36GB  | docker/compose.jnano.yaml |
 
 ## Docker Usage with this repository
 
@@ -40,22 +39,6 @@ docker volume rm docker_boxmot
 
 </details>
 
-<details> 
-<summary> <h3> on JetsonNano </h3> </summary>
-  
-Pull the Docker image and start compose (No need to run `docker compose build`)
-```bash
-cd src/boxmot_ros/docker
-docker compose -f compose.jnano.yaml pull
-docker compose -f compose.jnano.yaml up
-```
-
-Reset the system and remove volume
-```bash
-docker compose -f compose.jnano.yaml down
-docker volume rm docker_boxmot
-```
-</details>
 
 <br>
 
