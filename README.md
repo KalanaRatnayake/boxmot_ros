@@ -77,17 +77,26 @@ ros2 launch boxmot_ros boxmot.launch.py
 
 | ROS Parameter           | Docker ENV parameter    | Default Value                 | Description |
 | :---                    | :---                    | :---:                         | :---        |
-| tracking_model          | TRACKING_MODEL          | `deepocsort`                  | Model to be used for tracking. see [1] for default models |
-| reid_model              | REID_MODEL              | `osnet_x0_25_msmt17.pt`       | Model to be used for reidentification. see [1] for default models |
-| input_topic             | INPUT_TOPIC             | `/yolo_ros/detection_result`  | Topic to subscribe for RGB image. Accepts `sensor_msgs/Image` |
-| publish_tracking_image  | PUBLISH_ANNOTATED_IMAGE | `False`                       | Whether to publish tracking annotated image, increases callback execution time when set to `True` |
-| annotated_topic         | BOXMOT_ANNOTATED_TOPIC  | `/boxmot_ros/annotated_image` | Topic for publishing annotated images uses `sensor_msgs/Image` |
-| detailed_topic          | BOXMOT_DETAILED_TOPIC   | `/boxmot_ros/tracking_result` | Topic for publishing detailed results uses `detection_msgs/Detections` |
-| threshold               | BOXMOT_THRESHOLD        | `0.25`                        | Confidence threshold for predictions |
-| device                  | BOXMOT_DEVICE           | `'0'`                         | `cpu` for CPU, `0` for gpu, `0,1,2,3` if there are multiple GPUs |
+| yolo_model              | YOLO_MODEL              | `yolov9t.pt`                  | Model to be used. see [1] for default models and [2] for custom models |
+| tracking_model          | TRACKING_MODEL          | `deepocsort`                  | Model to be used for tracking. see [3] for default models |
+| reid_model              | REID_MODEL              | `osnet_x0_25_msmt17.pt`       | Model to be used for reidentification. see [3] for default models |
+| subscribe_depth         | SUBSCRIBE_DEPTH         | `False`                       | Whether to subscribe to depth image or not. This will also enable the depth_topic variable which publishes synchronized depth image. Use if having a depth camera. A ApproximateTimeSynchronizer is used to sync RGB and Depth images |
+| input_rgb_topic         | INPUT_RGB_TOPIC         | `/camera/color/image_raw`     | Topic to subscribe for RGB image. Accepts `sensor_msgs/Image` |
+| input_depth_topic       | INPUT_DEPTH_TOPIC       | `/camera/depth/points`        | Topic to subscribe for Depth image. Accepts `sensor_msgs/PointCloud2` |
+| publish_annotated_image | PUBLISH_ANNOTATED_IMAGE | `False`                       | Whether to publish tracking annotated image, increases callback execution time when set to `True` |
+| rgb_topic               | RGB_TOPIC        | `/boxmot_ros/rgb_image`       | Topic for publishing synchronized rgb images. uses `sensor_msgs/Image` |
+| depth_topic             | DEPTH_TOPIC      | `/boxmot_ros/depth_image`     | Topic for publishing synchronized depth images. uses `detection_msgs/PointCloud2` |
+| annotated_topic         | ANNOTATED_TOPIC  | `/boxmot_ros/annotated_image` | Topic for publishing annotated images uses `sensor_msgs/Image` |
+| detailed_topic          | DETAILED_TOPIC   | `/boxmot_ros/tracking_result` | Topic for publishing detailed results uses `detection_msgs/Detections` |
+| threshold               | THRESHOLD        | `0.25`                        | Confidence threshold for predictions |
+| device                  | DEVICE           | `'0'`                         | `cpu` for CPU, `0` for gpu, `0,1,2,3` if there are multiple GPUs |
 
 
-[1] If the reid model is available at [MODEL_ZOO](https://kaiyangzhou.github.io/deep-person-reid/MODEL_ZOO), and tracking_model is supported [deepocsort, strongsort, ocsort, bytetrack, botsort]. They will be downloaded from the cloud at the startup. We are using docker volumes to maintain downloaded weights so that weights are not downloaded at each startup. Use the snipped in [Default models with Docker Compose](https://github.com/KalanaRatnayake/boxmot_ros#default-models-with-docker-compose)
+[1] If the model is available at [ultralytics models](https://docs.ultralytics.com/models/), It will be downloaded from the cloud at the startup. We are using docker volumes to maintain downloaded weights so that weights are not downloaded at each startup.
+
+[2] Uncomment the commented out `YOLO_MODEL` parameter line and give the custom model weight file's name as `YOLO_MODEL` parameter. Uncomment the docker bind entry that to direct to the `weights` folder and comment the docker volume entry for yolo. Copy the custom weights to the `weights` folder.
+
+[3] If the reid model is available at [MODEL_ZOO](https://kaiyangzhou.github.io/deep-person-reid/MODEL_ZOO), and tracking_model is supported [deepocsort, strongsort, ocsort, bytetrack, botsort]. They will be downloaded from the cloud at the startup. We are using docker volumes to maintain downloaded weights so that weights are not downloaded at each startup. Use the snipped in [Default models with Docker Compose](https://github.com/KalanaRatnayake/boxmot_ros#default-models-with-docker-compose)
 
 ## Latency description
 

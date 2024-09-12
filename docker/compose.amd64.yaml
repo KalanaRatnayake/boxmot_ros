@@ -2,10 +2,16 @@ services:
   boxmot:
     image: ghcr.io/kalanaratnayake/boxmot-ros:humble
     environment:
+      - YOLO_MODEL=yolov10x.pt
+      # - YOLO_MODEL=weights/yolov9t.pt            ---> for custom weights
       - TRACKING_MODEL=deepocsort
       - REID_MODEL=osnet_x0_25_msmt17.pt
-      - INPUT_TOPIC=/yolo_ros/detection_result
+      - SUBSCRIBE_DEPTH=True
+      - INPUT_RGB_TOPIC=/camera/color/image_raw
+      - INPUT_DEPTH_TOPIC=/camera/depth/points
       - PUBLISH_ANNOTATED_IMAGE=True
+      - RGB_TOPIC=/boxmot_ros/rgb_image
+      - DEPTH_TOPIC=/boxmot_ros/depth_image
       - ANNOTATED_TOPIC=/boxmot_ros/annotated_image
       - DETAILED_TOPIC=/boxmot_ros/tracking_result
       - THRESHOLD=0.25

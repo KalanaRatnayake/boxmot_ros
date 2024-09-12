@@ -30,6 +30,8 @@ class BoxmotROS(Node):
         self.declare_parameter("input_depth_topic",         "/camera/depth/points")
         self.declare_parameter("subscribe_depth",           False)
         self.declare_parameter("publish_annotated_image",   False)
+        self.declare_parameter("rgb_topic",                 "/boxmot_ros/rgb_image")
+        self.declare_parameter("depth_topic",               "/boxmot_ros/depth_image")
         self.declare_parameter("annotated_topic",           "/boxmot_ros/annotated_image")
         self.declare_parameter("detailed_topic",            "/boxmot_ros/tracking_result")
         self.declare_parameter("threshold",                 0.25)
@@ -42,6 +44,8 @@ class BoxmotROS(Node):
         self.input_depth_topic          = self.get_parameter("input_depth_topic").get_parameter_value().string_value
         self.subscribe_depth            = self.get_parameter("subscribe_depth").get_parameter_value().bool_value
         self.publish_annotated_image    = self.get_parameter("publish_annotated_image").get_parameter_value().bool_value
+        self.rgb_topic                  = self.get_parameter("rgb_topic").get_parameter_value().string_value
+        self.depth_topic                = self.get_parameter("depth_topic").get_parameter_value().string_value
         self.annotated_topic            = self.get_parameter("annotated_topic").get_parameter_value().string_value
         self.detailed_topic             = self.get_parameter("detailed_topic").get_parameter_value().string_value
         self.threshold                  = self.get_parameter("threshold").get_parameter_value().double_value
@@ -93,10 +97,13 @@ class BoxmotROS(Node):
             self.synchornizer = ApproximateTimeSynchronizer([self.rgb_message_filter, self.depth_message_filter], 10, 1)
             self.synchornizer.registerCallback(self.sync_callback)
 
+            self.publisher_depth  = self.create_publisher(PointCloud2, self.depth_topic, 10)
+
         else:
             self.subscription = self.create_subscription(Image, self.input_rgb_topic, self.image_callback, qos_profile=self.subscriber_qos_profile)
         
         self.publisher_results  = self.create_publisher(Detections, self.detailed_topic, 10)
+        self.publisher_rgb      = self.create_publisher(Image, self.rgb_topic, 10)
 
         if self.publish_annotated_image:
             self.publisher_image    = self.create_publisher(Image, self.annotated_topic, 10)
@@ -148,19 +155,16 @@ class BoxmotROS(Node):
         else:
             detection_numpy = np.empty((0, 5))
 
-        #  input is of shape (x, y, x, y, conf, cls)
-        # output is of shape (x, y, x, y, id, conf, cls, ind)
+        #  input is of shape  (x, y, x, y, conf, cls)
+        #  output is of shape (x, y, x, y, id, conf, cls, ind)
 
         self.result_tracks = self.tracker.update(detection_numpy, self.input_image)
 
         if self.result_tracks is not None:
             
             self.tracking_msg.header            = rgb_msg.header
-            self.tracking_msg.source_rgb        = rgb_msg
-            self.tracking_msg.source_depth      = depth_msg
 
             for track in self.result_tracks:
-
                 x1          = track[0].astype('int')
                 y1          = track[1].astype('int')
                 x2          = track[2].astype('int')
@@ -184,11 +188,12 @@ class BoxmotROS(Node):
                 self.tracking_msg.confidence.append(confidence)
 
             self.publisher_results.publish(self.tracking_msg)
+            self.publisher_rgb.publish(rgb_msg)
+            self.publisher_depth.publish(depth_msg)
 
             if self.publish_annotated_image:
                 self.output_image = self.tracker.plot_results(self.input_image, show_trajectories=True)
                 result_msg        = self.bridge.cv2_to_imgmsg(self.output_image, encoding="bgr8")
-                
                 self.publisher_image.publish(result_msg)
 
         self.counter += 1
@@ -239,15 +244,14 @@ class BoxmotROS(Node):
         else:
             detection_numpy = np.empty((0, 5))
 
-        #  input is of shape (x, y, x, y, conf, cls)
-        # output is of shape (x, y, x, y, id, conf, cls, ind)
+        #  input is of shape  (x, y, x, y, conf, cls)
+        #  output is of shape (x, y, x, y, id, conf, cls, ind)
 
         self.result_tracks = self.tracker.update(detection_numpy, self.input_image)
 
         if self.result_tracks is not None:
             
             self.tracking_msg.header            = rgb_image.header
-            self.tracking_msg.source_rgb        = rgb_image
 
             for track in self.result_tracks:
 
@@ -274,6 +278,7 @@ class BoxmotROS(Node):
                 self.tracking_msg.confidence.append(confidence)
 
             self.publisher_results.publish(self.tracking_msg)
+            self.publisher_rgb.publish(rgb_image)
 
             if self.publish_annotated_image:
                 self.output_image = self.tracker.plot_results(self.input_image, show_trajectories=True)

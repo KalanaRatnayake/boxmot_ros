@@ -90,10 +90,15 @@ ENTRYPOINT [ "/workspace_entrypoint.sh" ]
 
 WORKDIR ${WORKSPACE_ROOT}
 
-CMD ros2 run boxmot_ros boxmot_ros --ros-args -p "tracking_model:=$TRACKING_MODEL" \
+CMD ros2 run boxmot_ros boxmot_ros --ros-args -p "yolo_model:=$YOLO_MODEL" \
+                                              -p "tracking_model:=$TRACKING_MODEL" \
                                               -p "reid_model:=$REID_MODEL" \
-                                              -p "input_topic:=$INPUT_TOPIC" \
+                                              -p "input_rgb_topic:=$INPUT_RGB_TOPIC" \
+                                              -p "input_depth_topic:=$INPUT_DEPTH_TOPIC" \
+                                              -p "subscribe_depth:=$SUBSCRIBE_DEPTH" \
                                               -p "publish_annotated_image:=$PUBLISH_ANNOTATED_IMAGE" \
+                                              -p "rgb_topic:=$RGB_TOPIC" \
+                                              -p "depth_topic:=$DEPTH_TOPIC" \
                                               -p "annotated_topic:=$ANNOTATED_TOPIC" \
                                               -p "detailed_topic:=$DETAILED_TOPIC" \
                                               -p "threshold:=$THRESHOLD" \
