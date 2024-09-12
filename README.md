@@ -96,7 +96,7 @@ ros2 launch boxmot_ros boxmot.launch.py
 
 [2] Uncomment the commented out `YOLO_MODEL` parameter line and give the custom model weight file's name as `YOLO_MODEL` parameter. Uncomment the docker bind entry that to direct to the `weights` folder and comment the docker volume entry for yolo. Copy the custom weights to the `weights` folder.
 
-[3] If the reid model is available at [MODEL_ZOO](https://kaiyangzhou.github.io/deep-person-reid/MODEL_ZOO), and tracking_model is supported [deepocsort, strongsort, ocsort, bytetrack, botsort]. They will be downloaded from the cloud at the startup. We are using docker volumes to maintain downloaded weights so that weights are not downloaded at each startup. Use the snipped in [Default models with Docker Compose](https://github.com/KalanaRatnayake/boxmot_ros#default-models-with-docker-compose)
+[3] If the reid model is available at [MODEL_ZOO](https://kaiyangzhou.github.io/deep-person-reid/MODEL_ZOO), and tracking_model is supported [`deepocsort`, `strongsort`, `ocsort`, `bytetrack`, `botsort`, `hybridsort`, `imprassoc`]. They will be downloaded from the cloud at the startup. We are using docker volumes to maintain downloaded weights so that weights are not downloaded at each startup. Use the snipped in [Default models with Docker Compose](https://github.com/KalanaRatnayake/boxmot_ros#default-models-with-docker-compose)
 
 ## Latency description
 

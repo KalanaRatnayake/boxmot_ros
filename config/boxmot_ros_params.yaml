@@ -1,9 +1,14 @@
 boxmot_ros_node:
   ros__parameters:
+    yolo_model: "yolov9s.pt"
     tracking_model: "deepocsort"
     reid_model: "osnet_x0_25_msmt17.pt"
-    input_topic: "/yolo_ros/detection_result"
+    input_rgb_topic: "/camera/color/image_raw"
+    input_depth_topic: "/camera/depth/points"
+    subscribe_depth: True
     publish_annotated_image: True
+    rgb_topic: "/boxmot_ros/rgb_image"
+    depth_topic: "/boxmot_ros/depth_image"
     annotated_topic: "/boxmot_ros/annotated_image"
     detailed_topic: "/boxmot_ros/tracking_result"
     threshold: 0.25

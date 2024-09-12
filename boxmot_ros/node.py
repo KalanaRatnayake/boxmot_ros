@@ -16,7 +16,7 @@ from detection_msgs.msg import Detections
 from cv_bridge import CvBridge
 
 from ultralytics import YOLO
-from boxmot import BoTSORT, DeepOCSORT, OCSORT, HybridSORT, BYTETracker, StrongSORT
+from boxmot import BoTSORT, DeepOCSORT, OCSORT, HybridSORT, BYTETracker, StrongSORT, ImprAssocTrack
 
 class BoxmotROS(Node):
 
@@ -82,6 +82,11 @@ class BoxmotROS(Node):
                                         device=self.device,
                                         half=False,
                                         det_thresh=self.threshold )
+            
+        elif self.tracking_model == "imprassoc":
+            self.tracker = ImprAssocTrack(  model_weights=Path(self.reid_model), # which ReID model to use
+                                        device=self.device,
+                                        fp16=False )
         else:
             self.get_logger().error('Please select a valid value for "tracking_model" parameter')
 
@@ -162,7 +167,16 @@ class BoxmotROS(Node):
 
         if self.result_tracks is not None:
             
-            self.tracking_msg.header            = rgb_msg.header
+            self.tracking_msg.header        = rgb_msg.header
+            self.tracking_msg.detections    = True
+
+            self.tracking_msg.bbx_center_x = []
+            self.tracking_msg.bbx_center_y = []
+            self.tracking_msg.bbx_size_w   = []
+            self.tracking_msg.bbx_size_h   = []
+            self.tracking_msg.class_id     = []
+            self.tracking_msg.tracking_id  = []
+            self.tracking_msg.confidence   = []
 
             for track in self.result_tracks:
                 x1          = track[0].astype('int')
@@ -215,6 +229,8 @@ class BoxmotROS(Node):
                                          device=self.device,
                                          verbose=False)
         
+        self.tracking_msg.header       = rgb_image.header
+
         if (not self.class_list_set) and (self.result is not None):
             for i in range(len(self.result[0].names)):
                 self.tracking_msg.full_class_list.append(self.result[0].names.get(i))
@@ -251,7 +267,16 @@ class BoxmotROS(Node):
 
         if self.result_tracks is not None:
             
-            self.tracking_msg.header            = rgb_image.header
+            self.tracking_msg.header        = rgb_image.header
+            self.tracking_msg.detections    = True
+
+            self.tracking_msg.bbx_center_x = []
+            self.tracking_msg.bbx_center_y = []
+            self.tracking_msg.bbx_size_w   = []
+            self.tracking_msg.bbx_size_h   = []
+            self.tracking_msg.class_id     = []
+            self.tracking_msg.tracking_id  = []
+            self.tracking_msg.confidence   = []
 
             for track in self.result_tracks:
 
