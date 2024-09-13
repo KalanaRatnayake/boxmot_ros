@@ -113,7 +113,6 @@ class BoxmotROS(Node):
         if self.publish_annotated_image:
             self.publisher_image    = self.create_publisher(Image, self.annotated_topic, 10)
 
-        self.subscription  # prevent unused variable warning
         self.counter = 0
         self.time = 0
 
